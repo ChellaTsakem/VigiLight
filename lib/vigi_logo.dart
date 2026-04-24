@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vigilight/app_colors.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Logo VigiLight — éclair stylisé dans un hexagone lumineux
+// Logo VigiLight — utilise le vrai logo assets/logo/VigiLight3.png
 // ─────────────────────────────────────────────────────────────────────────────
 class VigiLogo extends StatelessWidget {
   final double size;
@@ -15,30 +15,22 @@ class VigiLogo extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            gradient: AppColors.amberGradient,
-            borderRadius: BorderRadius.circular(size * 0.28),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.electricAmber.withOpacity(0.45),
-                blurRadius: size * 0.5,
-                spreadRadius: size * 0.05,
-              ),
-            ],
-          ),
-          child: CustomPaint(
-            painter: _LightningPainter(),
-            size: Size(size, size),
+        SizedBox(
+          width: 74,
+          height: 74,
+          child: Image.asset(
+            'assets/logo/VigiLight4Bg.png',
+            width: size,
+            height: size,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => _FallbackLogo(size: size),
           ),
         ),
         if (showText) ...[
           const SizedBox(height: 10),
           ShaderMask(
             shaderCallback: (bounds) =>
-                AppColors.amberGradient.createShader(bounds),
+                AppColors.goldGradient.createShader(bounds),
             child: Text(
               'VigiLight',
               style: TextStyle(
@@ -56,42 +48,74 @@ class VigiLogo extends StatelessWidget {
   }
 }
 
-class _LightningPainter extends CustomPainter {
+// Fallback si l'image ne charge pas
+class _FallbackLogo extends StatelessWidget {
+  final double size;
+  const _FallbackLogo({required this.size});
+
   @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.white
-      ..style = PaintingStyle.fill
-      ..strokeJoin = StrokeJoin.round;
-
-    final cx = size.width / 2;
-    final cy = size.height / 2;
-
-    // Éclair ⚡ centré
-    final path = Path();
-    path.moveTo(cx + 4, cy - size.height * 0.30);
-    path.lineTo(cx - 6, cy + size.height * 0.02);
-    path.lineTo(cx + 2, cy + size.height * 0.02);
-    path.lineTo(cx - 4, cy + size.height * 0.30);
-    path.lineTo(cx + 7, cy - size.height * 0.04);
-    path.lineTo(cx + 0, cy - size.height * 0.04);
-    path.close();
-
-    // Ombre légère
-    final shadowPaint = Paint()
-      ..color = Colors.black.withOpacity(0.18)
-      ..style = PaintingStyle.fill
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
-    canvas.drawPath(path.shift(const Offset(1.5, 1.5)), shadowPaint);
-    canvas.drawPath(path, paint);
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        gradient: AppColors.amberGradient,
+        borderRadius: BorderRadius.circular(size * 0.22),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.electricAmber.withOpacity(0.5),
+            blurRadius: size * 0.4,
+          ),
+        ],
+      ),
+      child: Icon(Icons.bolt_rounded, color: Colors.white, size: size * 0.55),
+    );
   }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Widget de fond animé (grille lumineuse)
+// Logo centré pour AppBar (version horizontale avec texte)
+// ─────────────────────────────────────────────────────────────────────────────
+class VigiLogoAppBar extends StatelessWidget {
+  final double logoSize;
+
+  const VigiLogoAppBar({super.key, this.logoSize = 36});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Image.asset(
+          'assets/logo/VigiLight5Bg.png',
+          width: logoSize,
+          height: logoSize,
+          fit: BoxFit.contain,
+          errorBuilder: (_, __, ___) =>
+              Icon(Icons.bolt_rounded, color: AppColors.electricAmber, size: logoSize),
+        ),
+        const SizedBox(width: 8),
+        ShaderMask(
+          shaderCallback: (bounds) =>
+              AppColors.goldGradient.createShader(bounds),
+          child: Text(
+            'VigiLight',
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: logoSize * 0.6,
+              fontWeight: FontWeight.w800,
+              color: Colors.white,
+              letterSpacing: 1.2,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Fond animé (particules + cercles lumineux)
 // ─────────────────────────────────────────────────────────────────────────────
 class AnimatedGridBackground extends StatefulWidget {
   final Widget child;
@@ -110,7 +134,7 @@ class _AnimatedGridBackgroundState extends State<AnimatedGridBackground>
   void initState() {
     super.initState();
     _ctrl = AnimationController(
-        vsync: this, duration: const Duration(seconds: 4))
+        vsync: this, duration: const Duration(seconds: 5))
       ..repeat(reverse: true);
     _anim = Tween<double>(begin: 0, end: 1).animate(_ctrl);
   }
@@ -125,25 +149,25 @@ class _AnimatedGridBackgroundState extends State<AnimatedGridBackground>
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Fond dégradé principal
+        // Fond noir profond
         Container(
           decoration: const BoxDecoration(gradient: AppColors.bgGradient),
         ),
-        // Cercle lumineux ambre en haut à droite
+        // Halo doré en haut à droite
         Positioned(
-          top: -80,
-          right: -60,
+          top: -100,
+          right: -80,
           child: AnimatedBuilder(
             animation: _anim,
             builder: (_, __) => Container(
-              width: 280,
-              height: 280,
+              width: 300,
+              height: 300,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
                     AppColors.electricAmber
-                        .withOpacity(0.10 + _anim.value * 0.06),
+                        .withOpacity(0.08 + _anim.value * 0.05),
                     Colors.transparent,
                   ],
                 ),
@@ -151,21 +175,21 @@ class _AnimatedGridBackgroundState extends State<AnimatedGridBackground>
             ),
           ),
         ),
-        // Cercle lumineux cyan en bas à gauche
+        // Halo bleu en bas à gauche
         Positioned(
-          bottom: -60,
-          left: -60,
+          bottom: -80,
+          left: -80,
           child: AnimatedBuilder(
             animation: _anim,
             builder: (_, __) => Container(
-              width: 220,
-              height: 220,
+              width: 250,
+              height: 250,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
                     AppColors.cyanBlue
-                        .withOpacity(0.08 + _anim.value * 0.04),
+                        .withOpacity(0.06 + _anim.value * 0.04),
                     Colors.transparent,
                   ],
                 ),
@@ -181,7 +205,7 @@ class _AnimatedGridBackgroundState extends State<AnimatedGridBackground>
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Glassmorphism card
+// GlassCard
 // ─────────────────────────────────────────────────────────────────────────────
 class GlassCard extends StatelessWidget {
   final Widget child;
@@ -210,7 +234,7 @@ class GlassCard extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withOpacity(0.4),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),

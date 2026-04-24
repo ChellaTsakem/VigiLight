@@ -5,30 +5,23 @@ import 'package:vigilight/home_screen.dart';
 import 'package:vigilight/login_screen.dart';
 import 'package:vigilight/map_screen.dart';
 import 'package:vigilight/notifications_screen.dart';
+import 'package:vigilight/alerts_screen.dart';
+import 'package:vigilight/incidents_screen.dart';
 import 'package:vigilight/onboarding_screen.dart';
 import 'package:vigilight/register_screen.dart';
 import 'package:vigilight/report_screen.dart';
-/*import 'core/theme/app_theme.dart';
-import 'features/onboarding/onboarding_screen.dart';
-import 'features/auth/login_screen.dart';
-import 'features/auth/register_screen.dart';
-import 'features/home/home_screen.dart';
-import 'features/map/map_screen.dart';
-import 'features/report/report_screen.dart';
-import 'features/notifications/notifications_screen.dart';*/
+import 'package:vigilight/profile_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Orientation portrait uniquement
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  // Barre de statut transparente
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: Color(0xFF080D1A),
+      systemNavigationBarColor: Color(0xFF0A0A0A),
     ),
   );
 
@@ -47,13 +40,16 @@ class VigiLightApp extends StatelessWidget {
       initialRoute: '/onboarding',
       onGenerateRoute: (settings) {
         final routes = {
-          '/onboarding': (_) => const OnboardingScreen(),
-          '/login': (_) => const LoginScreen(),
-          '/register': (_) => const RegisterScreen(),
-          '/home': (_) => const HomeScreen(),
-          '/map': (_) => const MapScreen(),
-          '/report': (_) => const ReportScreen(),
-          '/notifications': (_) => const NotificationsScreen(),
+          '/onboarding':     (_) => const OnboardingScreen(),
+          '/login':          (_) => const LoginScreen(),
+          '/register':       (_) => const RegisterScreen(),
+          '/home':           (_) => const HomeScreen(),
+          '/map':            (_) => const MapScreen(),
+          '/report':         (_) => const ReportScreen(),
+          '/notifications':  (_) => const NotificationsScreen(),
+          '/alerts':         (_) => const AlertsScreen(),
+          '/incidents':      (_) => const IncidentsScreen(),
+          '/profile':        (_) => const ProfileScreen(),
         };
 
         final builder = routes[settings.name];
@@ -64,14 +60,11 @@ class VigiLightApp extends StatelessWidget {
           pageBuilder: (ctx, _, __) => builder(ctx),
           transitionsBuilder: (_, animation, __, child) {
             return FadeTransition(
-              opacity: CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeOut,
-              ),
+              opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
               child: child,
             );
           },
-          transitionDuration: const Duration(milliseconds: 300),
+          transitionDuration: const Duration(milliseconds: 280),
         );
       },
     );

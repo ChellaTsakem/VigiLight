@@ -22,7 +22,7 @@ class AppTheme {
         displayColor: AppColors.textPrimary,
       ),
       appBarTheme: AppBarTheme(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.charcoal,
         elevation: 0,
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
@@ -49,7 +49,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppColors.electricAmber, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.electricAmber, width: 1.8),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
@@ -83,7 +83,7 @@ class AppTheme {
         ),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: AppColors.navyCard,
+        backgroundColor: AppColors.charcoal,
         selectedItemColor: AppColors.electricAmber,
         unselectedItemColor: AppColors.textMuted,
         type: BottomNavigationBarType.fixed,
